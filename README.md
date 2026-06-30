@@ -4,6 +4,20 @@ Hog is a lightweight macOS menu bar utility that shows the top CPU-consuming pro
 
 It samples the process table every few seconds, excludes itself, and displays the top offender in the menu bar. The popover shows the top three processes, their CPU percentages, a manual refresh button, and a shortcut to Activity Monitor.
 
+## Install
+
+```sh
+brew tap svperior-jon/hog https://github.com/svperior-jon/hog
+brew trust --cask svperior-jon/hog/hog
+brew install --cask svperior-jon/hog/hog
+```
+
+Homebrew 6 requires explicit trust for third-party cask taps. After the tap is trusted, updates can be installed with:
+
+```sh
+brew upgrade --cask svperior-jon/hog/hog
+```
+
 ## Build and Run
 
 ```sh
@@ -52,4 +66,4 @@ The notarization script uses the `hog-notary` Keychain profile by default. Overr
 
 ## Cask
 
-`Casks/hog.rb` is a template. Replace the GitHub owner, repo, and SHA-256 after publishing the zip as a release asset.
+The Homebrew Cask lives at `Casks/hog.rb` and installs the signed, notarized release zip from GitHub.
