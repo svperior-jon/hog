@@ -3,8 +3,8 @@ import Foundation
 struct ProcessSampler {
     var processNameExclusions: Set<String> = ["Hog", "ps"]
 
-    func sample(limit: Int = 3) async throws -> [ProcessSample] {
-        let output = try await runPS()
+    func sample(limit: Int = 3) throws -> [ProcessSample] {
+        let output = try runPS()
         return parse(output: output)
             .filter { !processNameExclusions.contains($0.name) }
             .sorted { lhs, rhs in
@@ -39,33 +39,25 @@ struct ProcessSampler {
             }
     }
 
-    private func runPS() async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            let process = Process()
-            let pipe = Pipe()
+    private func runPS() throws -> String {
+        let process = Process()
+        let pipe = Pipe()
 
-            process.executableURL = URL(fileURLWithPath: "/bin/ps")
-            process.arguments = ["-axo", "pid=,pcpu=,comm="]
-            process.standardOutput = pipe
-            process.standardError = Pipe()
+        process.executableURL = URL(fileURLWithPath: "/bin/ps")
+        process.arguments = ["-axo", "pid=,pcpu=,comm="]
+        process.standardOutput = pipe
+        process.standardError = Pipe()
 
-            process.terminationHandler = { process in
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                let output = String(data: data, encoding: .utf8) ?? ""
+        try process.run()
+        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        process.waitUntilExit()
+        let output = String(data: data, encoding: .utf8) ?? ""
 
-                if process.terminationStatus == 0 {
-                    continuation.resume(returning: output)
-                } else {
-                    continuation.resume(throwing: SamplerError.psFailed(process.terminationStatus))
-                }
-            }
-
-            do {
-                try process.run()
-            } catch {
-                continuation.resume(throwing: error)
-            }
+        if process.terminationStatus == 0 {
+            return output
         }
+
+        throw SamplerError.psFailed(process.terminationStatus)
     }
 }
 

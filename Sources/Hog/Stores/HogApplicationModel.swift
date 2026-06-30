@@ -10,5 +10,6 @@ final class HogApplicationModel: ObservableObject {
         monitor = ProcessMonitor()
         loginItemController = LoginItemController()
         statusItemController = StatusItemController(monitor: monitor)
+        monitor.start()
     }
 }

@@ -17,6 +17,7 @@ final class StatusItemController {
         configurePopover()
         bindMonitor()
         update(snapshot: monitor.snapshot)
+        monitor.start()
     }
 
     private func configureStatusItem() {

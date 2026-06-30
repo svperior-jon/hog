@@ -19,4 +19,11 @@ struct ProcessSamplerTests {
             ProcessSample(pid: 102, name: "ps", cpu: 0.0)
         ])
     }
+
+    @Test
+    func sampleReturnsCurrentProcesses() throws {
+        let samples = try ProcessSampler().sample(limit: 3)
+
+        #expect(!samples.isEmpty)
+    }
 }

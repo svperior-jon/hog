@@ -13,12 +13,13 @@ final class ProcessMonitor: ObservableObject {
     private let sampler = ProcessSampler()
     private var task: Task<Void, Never>?
 
-    init() {
-        restart()
-    }
-
     deinit {
         task?.cancel()
+    }
+
+    func start() {
+        guard task == nil else { return }
+        restart()
     }
 
     func refreshNow() {
@@ -46,7 +47,10 @@ final class ProcessMonitor: ObservableObject {
 
     private func refresh() async {
         do {
-            let processes = try await sampler.sample(limit: 3)
+            let sampler = sampler
+            let processes = try await Task.detached(priority: .utility) {
+                try sampler.sample(limit: 3)
+            }.value
             snapshot = ProcessSnapshot(topProcesses: processes, sampledAt: Date(), errorMessage: nil)
         } catch {
             snapshot = ProcessSnapshot(
