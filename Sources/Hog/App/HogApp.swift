@@ -5,6 +5,7 @@ import SwiftUI
 struct HogApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var monitor = ProcessMonitor()
+    @StateObject private var loginItemController = LoginItemController()
 
     var body: some Scene {
         MenuBarExtra {
@@ -16,7 +17,7 @@ struct HogApp: App {
         .menuBarExtraStyle(.window)
 
         Settings {
-            SettingsView(monitor: monitor)
+            SettingsView(monitor: monitor, loginItemController: loginItemController)
         }
     }
 }

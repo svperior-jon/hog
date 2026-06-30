@@ -1,6 +1,6 @@
 cask "hog" do
-  version "0.1.0"
-  sha256 "7b31cd45f6aa15fd30aae7beb75148fe6bc3cd4a6bbdee771d94d777fbed7c91"
+  version "0.1.1"
+  sha256 "879050b6e6cd10ffb70a51dada1afcc09fa44a61c5a6c33e7731abed0f33be52"
 
   url "https://github.com/svperior-jon/hog/releases/download/v#{version}/Hog-#{version}.zip"
   name "Hog"
@@ -8,4 +8,8 @@ cask "hog" do
   homepage "https://github.com/svperior-jon/hog"
 
   app "Hog.app"
+
+  postflight do
+    system_command "/usr/bin/open", args: ["#{appdir}/Hog.app"]
+  end
 end

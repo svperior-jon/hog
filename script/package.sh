@@ -23,7 +23,13 @@ if [[ -z "$SIGNING_IDENTITY" ]]; then
   exit 1
 fi
 
-HOG_BUILD_CONFIGURATION=release HOG_SIGNING_IDENTITY="$SIGNING_IDENTITY" "$ROOT_DIR/script/build_and_run.sh" --verify
+BUILD_NUMBER="${HOG_BUILD_NUMBER:-${VERSION//./}}"
+
+HOG_BUILD_CONFIGURATION=release \
+  HOG_SIGNING_IDENTITY="$SIGNING_IDENTITY" \
+  HOG_APP_VERSION="$VERSION" \
+  HOG_BUILD_NUMBER="$BUILD_NUMBER" \
+  "$ROOT_DIR/script/build_and_run.sh" --verify
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
 
 rm -f "$ARCHIVE"

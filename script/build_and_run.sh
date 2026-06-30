@@ -7,6 +7,8 @@ BUNDLE_ID="com.jonathandecollibus.Hog"
 MIN_SYSTEM_VERSION="14.0"
 BUILD_CONFIGURATION="${HOG_BUILD_CONFIGURATION:-debug}"
 SIGNING_IDENTITY="${HOG_SIGNING_IDENTITY:-}"
+APP_VERSION="${HOG_APP_VERSION:-0.1.0}"
+BUILD_NUMBER="${HOG_BUILD_NUMBER:-1}"
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
@@ -43,9 +45,9 @@ cat >"$INFO_PLIST" <<PLIST
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>0.1.0</string>
+  <string>$APP_VERSION</string>
   <key>CFBundleVersion</key>
-  <string>1</string>
+  <string>$BUILD_NUMBER</string>
   <key>LSMinimumSystemVersion</key>
   <string>$MIN_SYSTEM_VERSION</string>
   <key>LSUIElement</key>
