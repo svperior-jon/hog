@@ -1,5 +1,4 @@
 import AppKit
-import Combine
 import SwiftUI
 
 @MainActor
@@ -7,16 +6,14 @@ final class StatusItemController {
     private let monitor: ProcessMonitor
     private let statusItem: NSStatusItem
     private let popover = NSPopover()
-    private var cancellables: Set<AnyCancellable> = []
 
     init(monitor: ProcessMonitor) {
         self.monitor = monitor
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 
         configureStatusItem()
         configurePopover()
-        bindMonitor()
-        update(snapshot: monitor.snapshot)
+        updateStatusItem()
         monitor.start()
     }
 
@@ -45,23 +42,9 @@ final class StatusItemController {
         )
     }
 
-    private func bindMonitor() {
-        monitor.$snapshot
-            .receive(on: RunLoop.main)
-            .sink { [weak self] snapshot in
-                self?.update(snapshot: snapshot)
-            }
-            .store(in: &cancellables)
-    }
-
-    private func update(snapshot: ProcessSnapshot) {
+    private func updateStatusItem() {
         guard let button = statusItem.button else { return }
-
-        if let leader = snapshot.leader {
-            button.title = " \(leader.name) \(Formatters.cpu(leader.cpu))"
-        } else {
-            button.title = ""
-        }
+        button.title = ""
     }
 
     @objc private func togglePopover(_ sender: NSStatusBarButton) {
