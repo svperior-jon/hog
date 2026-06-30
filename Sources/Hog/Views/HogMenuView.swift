@@ -7,7 +7,7 @@ struct HogMenuView: View {
     @Environment(\.openSettings) private var openSettings
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             header
 
             Divider()
@@ -18,27 +18,22 @@ struct HogMenuView: View {
                     .foregroundStyle(.secondary)
             }
 
-            ProcessListView(processes: monitor.snapshot.topProcesses)
+            ProcessListView(
+                processes: monitor.snapshot.topProcesses,
+                hasSampled: monitor.snapshot.sampledAt != nil
+            )
 
             Divider()
 
             footer
         }
-        .padding(14)
+        .padding(12)
     }
 
     private var header: some View {
-        HStack(spacing: 9) {
-            HogMark()
-                .frame(width: 18, height: 18)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Hog")
-                    .font(.headline)
-                Text("Top CPU consumers")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
+        HStack(spacing: 8) {
+            Text("Top CPU")
+                .font(.callout.weight(.semibold))
 
             Spacer()
 

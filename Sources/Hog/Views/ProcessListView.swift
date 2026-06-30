@@ -2,12 +2,13 @@ import SwiftUI
 
 struct ProcessListView: View {
     let processes: [ProcessSample]
+    let hasSampled: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 6) {
             if processes.isEmpty {
-                Text("No active CPU consumers")
-                    .font(.callout)
+                Text(hasSampled ? "No samples" : "Sampling...")
+                    .font(.caption)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else {
@@ -28,19 +29,19 @@ private struct ProcessRow: View {
             Text("\(rank)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-                .frame(width: 18, alignment: .trailing)
+                .frame(width: 14, alignment: .trailing)
 
             Text(process.name)
-                .font(.callout)
+                .font(.caption)
                 .lineLimit(1)
                 .truncationMode(.middle)
 
             Spacer(minLength: 12)
 
             Text(Formatters.cpu(process.cpu))
-                .font(.callout.monospacedDigit())
+                .font(.caption.monospacedDigit())
                 .foregroundStyle(process.cpu >= 50 ? .red : .primary)
-                .frame(width: 58, alignment: .trailing)
+                .frame(width: 52, alignment: .trailing)
         }
         .accessibilityElement(children: .combine)
     }

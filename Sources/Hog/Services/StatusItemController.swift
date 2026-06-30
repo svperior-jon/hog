@@ -32,7 +32,7 @@ final class StatusItemController {
 
     private func configurePopover() {
         popover.behavior = .transient
-        popover.contentSize = NSSize(width: 320, height: 250)
+        popover.contentSize = NSSize(width: 280, height: 180)
         popover.contentViewController = NSHostingController(
             rootView: HogMenuView(
                 monitor: monitor,
@@ -40,7 +40,7 @@ final class StatusItemController {
                     self?.openSettings()
                 }
             )
-            .frame(width: 320)
+            .frame(width: 280)
         )
     }
 
@@ -67,6 +67,7 @@ final class StatusItemController {
         if popover.isShown {
             popover.performClose(sender)
         } else {
+            monitor.refreshNow()
             popover.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
         }
     }
