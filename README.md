@@ -30,6 +30,14 @@ dist/Hog-0.1.0.zip
 
 The script prints the SHA-256 digest for use in a Homebrew Cask.
 
+By default, packaging signs the app with the local Developer ID identity:
+
+```text
+Developer ID Application: Superior Digital Partners, LLC (W9XJY8C57G)
+```
+
+Override it with `HOG_SIGNING_IDENTITY` if needed.
+
 ## Cask
 
 `Casks/hog.rb` is a template. Replace the GitHub owner, repo, and SHA-256 after publishing the zip as a release asset.
