@@ -8,7 +8,20 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIST_DIR="$ROOT_DIR/dist"
 ARCHIVE="$DIST_DIR/$APP_NAME-$VERSION.zip"
 
-SIGNING_IDENTITY="${HOG_SIGNING_IDENTITY:-Developer ID Application: Superior Digital Partners, LLC (W9XJY8C57G)}"
+SIGNING_IDENTITY="${HOG_SIGNING_IDENTITY:-}"
+
+if [[ -z "$SIGNING_IDENTITY" ]]; then
+  SIGNING_IDENTITY="$(
+    security find-identity -v -p codesigning |
+      awk -F '"' '/Developer ID Application/ { print $2; exit }'
+  )"
+fi
+
+if [[ -z "$SIGNING_IDENTITY" ]]; then
+  echo "No Developer ID Application signing identity found." >&2
+  echo "Set HOG_SIGNING_IDENTITY to the signing identity name and try again." >&2
+  exit 1
+fi
 
 HOG_BUILD_CONFIGURATION=release HOG_SIGNING_IDENTITY="$SIGNING_IDENTITY" "$ROOT_DIR/script/build_and_run.sh" --verify
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
