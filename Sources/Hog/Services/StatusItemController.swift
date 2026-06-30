@@ -59,7 +59,7 @@ final class StatusItemController {
         if let leader = snapshot.leader {
             button.title = " \(leader.name) \(Formatters.cpu(leader.cpu))"
         } else {
-            button.title = " Hog"
+            button.title = ""
         }
     }
 

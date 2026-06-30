@@ -33,13 +33,13 @@ dist/Hog.app
 ## Package
 
 ```sh
-./script/package.sh 0.1.2
+./script/package.sh 0.1.3
 ```
 
 This creates:
 
 ```text
-dist/Hog-0.1.2.zip
+dist/Hog-0.1.3.zip
 ```
 
 The script prints the SHA-256 digest for use in a Homebrew Cask.
@@ -59,7 +59,7 @@ When prompted, enter an app-specific password for that Apple ID.
 Then notarize, staple, validate, and rebuild the caskable zip:
 
 ```sh
-./script/notarize.sh 0.1.2
+./script/notarize.sh 0.1.3
 ```
 
 The notarization script uses the `hog-notary` Keychain profile by default. Override it with `HOG_NOTARY_PROFILE` if needed.
