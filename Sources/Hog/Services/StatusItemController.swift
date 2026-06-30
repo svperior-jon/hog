@@ -4,11 +4,13 @@ import SwiftUI
 @MainActor
 final class StatusItemController {
     private let monitor: ProcessMonitor
+    private let settingsWindowController: SettingsWindowController
     private let statusItem: NSStatusItem
     private let popover = NSPopover()
 
-    init(monitor: ProcessMonitor) {
+    init(monitor: ProcessMonitor, settingsWindowController: SettingsWindowController) {
         self.monitor = monitor
+        self.settingsWindowController = settingsWindowController
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
 
         configureStatusItem()
@@ -58,8 +60,7 @@ final class StatusItemController {
 
     private func openSettings() {
         popover.performClose(nil)
-        NSApp.activate(ignoringOtherApps: true)
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        settingsWindowController.show()
     }
 }
 
