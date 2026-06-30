@@ -3,6 +3,7 @@ import SwiftUI
 
 struct HogMenuView: View {
     @ObservedObject var monitor: ProcessMonitor
+    var openSettingsAction: (() -> Void)?
     @Environment(\.openSettings) private var openSettings
 
     var body: some View {
@@ -67,7 +68,11 @@ struct HogMenuView: View {
             }
 
             Button("Settings") {
-                openSettings()
+                if let openSettingsAction {
+                    openSettingsAction()
+                } else {
+                    openSettings()
+                }
             }
         }
         .font(.caption)

@@ -4,20 +4,14 @@ import SwiftUI
 @main
 struct HogApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @StateObject private var monitor = ProcessMonitor()
-    @StateObject private var loginItemController = LoginItemController()
+    @StateObject private var model = HogApplicationModel()
 
     var body: some Scene {
-        MenuBarExtra {
-            HogMenuView(monitor: monitor)
-                .frame(width: 320)
-        } label: {
-            MenuBarLabel(snapshot: monitor.snapshot)
-        }
-        .menuBarExtraStyle(.window)
-
         Settings {
-            SettingsView(monitor: monitor, loginItemController: loginItemController)
+            SettingsView(
+                monitor: model.monitor,
+                loginItemController: model.loginItemController
+            )
         }
     }
 }
