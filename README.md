@@ -38,6 +38,26 @@ Developer ID Application: Superior Digital Partners, LLC (W9XJY8C57G)
 
 Override it with `HOG_SIGNING_IDENTITY` if needed.
 
+## Notarize
+
+Create a notary profile once with your Apple Developer account:
+
+```sh
+xcrun notarytool store-credentials hog-notary \
+  --apple-id "you@example.com" \
+  --team-id "W9XJY8C57G"
+```
+
+When prompted, enter an app-specific password for that Apple ID.
+
+Then notarize, staple, validate, and rebuild the caskable zip:
+
+```sh
+./script/notarize.sh 0.1.0
+```
+
+The notarization script uses the `hog-notary` Keychain profile by default. Override it with `HOG_NOTARY_PROFILE` if needed.
+
 ## Cask
 
 `Casks/hog.rb` is a template. Replace the GitHub owner, repo, and SHA-256 after publishing the zip as a release asset.
