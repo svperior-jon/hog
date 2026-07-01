@@ -1,3 +1,4 @@
+import Foundation
 import Testing
 @testable import Hog
 
@@ -25,5 +26,52 @@ struct ProcessSamplerTests {
         let samples = try ProcessSampler().sample(limit: 3)
 
         #expect(!samples.isEmpty)
+    }
+
+    @Test
+    func sustainedFilterRequiresContinuousThresholdDuration() {
+        var filter = SustainedProcessFilter()
+        let start = Date(timeIntervalSince1970: 0)
+        let sample = ProcessSample(pid: 10, name: "Worker", cpu: 51)
+
+        let first = filter.update(
+            samples: [sample],
+            at: start,
+            threshold: 50,
+            minimumDuration: 30,
+            limit: 3
+        )
+        let early = filter.update(
+            samples: [sample],
+            at: start.addingTimeInterval(29),
+            threshold: 50,
+            minimumDuration: 30,
+            limit: 3
+        )
+        let qualified = filter.update(
+            samples: [sample],
+            at: start.addingTimeInterval(30),
+            threshold: 50,
+            minimumDuration: 30,
+            limit: 3
+        )
+
+        #expect(first.isEmpty)
+        #expect(early.isEmpty)
+        #expect(qualified == [sample])
+    }
+
+    @Test
+    func sustainedFilterResetsWhenProcessDropsBelowThreshold() {
+        var filter = SustainedProcessFilter()
+        let start = Date(timeIntervalSince1970: 0)
+        let high = ProcessSample(pid: 10, name: "Worker", cpu: 51)
+        let low = ProcessSample(pid: 10, name: "Worker", cpu: 49)
+
+        _ = filter.update(samples: [high], at: start, threshold: 50, minimumDuration: 30, limit: 3)
+        _ = filter.update(samples: [low], at: start.addingTimeInterval(10), threshold: 50, minimumDuration: 30, limit: 3)
+        let result = filter.update(samples: [high], at: start.addingTimeInterval(35), threshold: 50, minimumDuration: 30, limit: 3)
+
+        #expect(result.isEmpty)
     }
 }

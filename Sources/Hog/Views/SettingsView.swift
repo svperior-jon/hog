@@ -18,6 +18,20 @@ struct SettingsView: View {
             }
             .pickerStyle(.segmented)
 
+            HStack {
+                Text("CPU threshold")
+
+                Spacer()
+
+                Stepper(
+                    "\(Int(monitor.cpuThreshold))%",
+                    value: $monitor.cpuThreshold,
+                    in: 5...200,
+                    step: 5
+                )
+                .monospacedDigit()
+            }
+
             if let errorMessage = loginItemController.errorMessage {
                 Text(errorMessage)
                     .font(.caption)

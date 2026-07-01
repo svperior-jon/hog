@@ -7,7 +7,7 @@ struct ProcessListView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if processes.isEmpty {
-                Text(hasSampled ? "No samples" : "Sampling...")
+                Text("Hog has no truffles")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)

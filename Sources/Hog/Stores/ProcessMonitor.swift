@@ -9,8 +9,16 @@ final class ProcessMonitor: ObservableObject {
             restart()
         }
     }
+    @Published var cpuThreshold: Double = 50 {
+        didSet {
+            guard cpuThreshold != oldValue else { return }
+            sustainedFilter.reset()
+            snapshot = ProcessSnapshot(topProcesses: [], sampledAt: Date(), errorMessage: nil)
+        }
+    }
 
     private let sampler = ProcessSampler()
+    private var sustainedFilter = SustainedProcessFilter()
     private var task: Task<Void, Never>?
 
     deinit {
@@ -48,9 +56,17 @@ final class ProcessMonitor: ObservableObject {
     private func refresh() async {
         do {
             let sampler = sampler
-            let processes = try await Task.detached(priority: .utility) {
-                try sampler.sample(limit: 3)
+            let samples = try await Task.detached(priority: .utility) {
+                try sampler.sample(limit: 30)
             }.value
+            let now = Date()
+            let processes = sustainedFilter.update(
+                samples: samples,
+                at: now,
+                threshold: cpuThreshold,
+                minimumDuration: 30,
+                limit: 3
+            )
             snapshot = ProcessSnapshot(topProcesses: processes, sampledAt: Date(), errorMessage: nil)
         } catch {
             snapshot = ProcessSnapshot(

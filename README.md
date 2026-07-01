@@ -6,7 +6,7 @@
 
 Hog is a lightweight macOS menu bar utility that shows the top CPU-consuming processes.
 
-It samples the process table every few seconds, excludes itself, and stays icon-only in the menu bar. The popover shows the top three processes, their CPU percentages, a manual refresh button, and a shortcut to Activity Monitor.
+It samples the process table every few seconds, excludes itself, and stays icon-only in the menu bar. The popover shows up to three processes that have stayed above the CPU threshold for at least 30 seconds, plus a manual refresh button and a shortcut to Activity Monitor. If nothing qualifies, Hog says it has no truffles.
 
 ## Install
 
@@ -37,13 +37,13 @@ dist/Hog.app
 ## Package
 
 ```sh
-./script/package.sh 0.1.8
+./script/package.sh 0.1.9
 ```
 
 This creates:
 
 ```text
-dist/Hog-0.1.8.zip
+dist/Hog-0.1.9.zip
 ```
 
 The script prints the SHA-256 digest for use in a Homebrew Cask.
@@ -63,7 +63,7 @@ When prompted, enter an app-specific password for that Apple ID.
 Then notarize, staple, validate, and rebuild the caskable zip:
 
 ```sh
-./script/notarize.sh 0.1.8
+./script/notarize.sh 0.1.9
 ```
 
 The notarization script uses the `hog-notary` Keychain profile by default. Override it with `HOG_NOTARY_PROFILE` if needed.
