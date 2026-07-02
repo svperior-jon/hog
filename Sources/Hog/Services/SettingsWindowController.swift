@@ -25,6 +25,8 @@ final class SettingsWindowController {
             settingsWindow.title = "Hog Settings"
             settingsWindow.styleMask = [.titled, .closable]
             settingsWindow.isReleasedWhenClosed = false
+            settingsWindow.setContentSize(NSSize(width: 440, height: 190))
+            settingsWindow.minSize = NSSize(width: 440, height: 190)
             settingsWindow.center()
             window = settingsWindow
         }
