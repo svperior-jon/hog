@@ -1,6 +1,6 @@
 cask "hog" do
-  version "0.1.10"
-  sha256 "d98ea7e9a957b1f1dc1869f578d90a7bdd58d1415469ec32cea1b10c0b06db2a"
+  version "0.1.11"
+  sha256 "009034246e7ddc6960fd82ff14c29195b404f660029ee3f320959631817bf4c4"
 
   url "https://github.com/svperior-jon/hog/releases/download/v#{version}/Hog-#{version}.zip"
   name "Hog"

@@ -1,4 +1,5 @@
 import AppKit
+import Combine
 import SwiftUI
 
 @MainActor
@@ -7,6 +8,7 @@ final class StatusItemController {
     private let settingsWindowController: SettingsWindowController
     private let statusItem: NSStatusItem
     private let popover = NSPopover()
+    private var cancellables: Set<AnyCancellable> = []
 
     init(monitor: ProcessMonitor, settingsWindowController: SettingsWindowController) {
         self.monitor = monitor
@@ -15,7 +17,8 @@ final class StatusItemController {
 
         configureStatusItem()
         configurePopover()
-        updateStatusItem()
+        bindMonitor()
+        updateStatusItem(hasHogs: !monitor.snapshot.topProcesses.isEmpty)
         monitor.start()
     }
 
@@ -28,6 +31,15 @@ final class StatusItemController {
         button.target = self
         button.action = #selector(togglePopover(_:))
         button.toolTip = "Hog"
+    }
+
+    private func bindMonitor() {
+        monitor.$snapshot
+            .receive(on: RunLoop.main)
+            .sink { [weak self] snapshot in
+                self?.updateStatusItem(hasHogs: !snapshot.topProcesses.isEmpty)
+            }
+            .store(in: &cancellables)
     }
 
     private func configurePopover() {
@@ -44,9 +56,10 @@ final class StatusItemController {
         )
     }
 
-    private func updateStatusItem() {
+    private func updateStatusItem(hasHogs: Bool) {
         guard let button = statusItem.button else { return }
         button.title = ""
+        button.contentTintColor = hasHogs ? .systemRed : nil
     }
 
     @objc private func togglePopover(_ sender: NSStatusBarButton) {
